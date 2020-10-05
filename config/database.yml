@@ -50,5 +50,6 @@ test:
 production:
   <<: *default
   database: examportal_production
-  username: examportal
+  username: admin
   password: <%= ENV['EXAMPORTAL_DATABASE_PASSWORD'] %>
+  host: examportal-db.cnnwrw0ewfkr.ap-south-1.rds.amazonaws.com

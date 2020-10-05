@@ -6,6 +6,7 @@
 # server "example.com", user: "deploy", roles: %w{app db web}, my_property: :my_value
 # server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
 # server "db.example.com", user: "deploy", roles: %w{db}
+server "ec2-13-127-137-86.ap-south-1.compute.amazonaws.com", user: "ubuntu", roles: %w{db}
 
 
 
@@ -41,11 +42,12 @@
 #
 # Global options
 # --------------
-#  set :ssh_options, {
-#    keys: %w(/home/user_name/.ssh/id_rsa),
-#    forward_agent: false,
-#    auth_methods: %w(password)
-#  }
+set :pty, true
+set :ssh_options, {
+  keys: %w(/home/saurabh/misc/examportal.pem),
+  forward_agent: false,
+  auth_methods: %w(publickey)
+}
 #
 # The server-based syntax can be used to override options:
 # ------------------------------------
