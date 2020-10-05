@@ -1,0 +1,62 @@
+<%= render 'student_header' %>
+
+<div class="columns is-vcentered is-mobile is-multiline mt-1">
+  <div class="column is-full has-text-centered pb-1 pt-4">
+    <h1 class="title is-4">Question Paper</h1>
+    <h4 class="subtitle is-6">Click on an image to download</h4>
+  </div>
+
+  <div class="column is-full has-text-centered pt-1">
+    <% @exam.question_papers.each do |question_paper| %>
+      <%= link_to rails_blob_path(question_paper.image, disposition: 'preview'), class: "button mx-1 mb-3", target: '_blank' do %>
+        <span class="icon">
+          <i class="fas fa-file-download"></i>
+        </span>
+        <span>Page <%= question_paper.page_number %></span>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="column is-full has-text-centered pb-2 pt-4">
+    <h1 class="title is-4">Answer Paper</h1>
+    <h4 class="subtitle is-6">Upload each page number in correct order</h4>
+  </div>
+
+  <div class="column is-full has-text-centered pt-1">
+    <%= form_with(url: exam_submissions_url, multipart: true, id: 'exam-submission-form') do |form| %>
+      <div class="columns is-multiline is-mobile is-gapless is-centered mb-3">
+        <% (1..15).each do |page_number| %>
+          <div class="column is-2 mx-1">
+            <div class="field">
+              <div class="file is-small is-boxed has-name">
+                <label class="file-label">
+                  <%= form.file_field :answer_paper, direct_upload: true, accept: "image/*", class: 'file-input', name: "answer_papers[#{page_number}]" %>
+                  <span class="file-cta">
+                    <span class="file-icon">
+                      <i class="fas fa-upload"></i>
+                    </span>
+                    <span class="file-label">
+                      Page <%= page_number %>
+                    </span>
+                  </span>
+                  <span class="file-name">
+                    blank.
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="px-4 mt-0">
+
+        <p class="has-text-danger mb-2 is-size-6 is-hidden" id="exam-submission-error">There was an error, please submit again.</p>
+
+        <p class="mb-1 is-size-7 has-text-grey" id="exam-submission-error">To clear uploads, refresh the page.</p>
+        <%= form.button 'Save', class: 'button is-link is-fullwidth', id: 'exam-submission-form-submit' %>
+      </div>
+    <% end %>
+  </div>
+
+</div>

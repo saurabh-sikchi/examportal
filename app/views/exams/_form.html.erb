@@ -1,0 +1,115 @@
+<%= form_with(model: exam, local: true, multipart: true) do |form| %>
+
+  <div class="level is-mobile mb-2" id="class-subject-inputs">
+    <div class="level-left">
+      <div class="level-item mx-3">
+        <div class="field">
+          <label class="label">Class</label>
+          <div class="select">
+            <%= form.collection_select(:class_name, Exam::CLASSES, :itself, :itself) %>
+          </div>
+        </div>
+      </div>
+      <div class="level-item mx-3">
+        <div class="field">
+          <label class="label">Subject</label>
+          <div class="select">
+            <%= form.collection_select(:subject, Exam::SUBJECTS, :itself, :itself) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field mb-4">
+    <label class="label ml-3">Date of Exam</label>
+    <%= form.date_select :exam_date, start_year: Date.today.year, end_year: Date.today.year, with_css_classes: { year: 'select ml-3 px-1', month: 'select ml-1 px-1', day: 'select ml-1 px-2' } %>
+  </div>
+
+  <div class="level is-mobile mb-2" id="exam-time-inputs">
+    <div class="level-left">
+      <div class="level-item mx-3">
+        <div class="field">
+          <label class="label">Start</label>
+          <div class="select">
+            <%= form.collection_select(:start_time, Exam::TIMES, :itself, :itself) %>
+          </div>
+        </div>
+      </div>
+      <div class="level-item mx-3">
+        <div class="field">
+          <label class="label">End</label>
+          <div class="select">
+            <%= form.collection_select(:end_time, Exam::TIMES, :itself, :itself) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <% if exam.persisted? %>
+    <%# <p class="ml-4 has-text-grey-light mt-1 mb-3 is-size-6">If you want to change the photos of question papers, please delete the exam and create a new one.</p> %>
+  <% else  %>
+    <div class="columns is-multiline is-mobile ml-3 mr-1 is-gapless mb-2">
+      <div class="column is-12">
+        <label class="label mb-2 ml-1">Photos of Question Paper</label>
+      </div>
+        <% (1..9).each do |page_number| %>
+          <div class="column is-3 mx-1">
+            <div class="field">
+              <div class="file is-small is-boxed has-name">
+                <label class="file-label">
+                  <%= form.file_field :question_paper, direct_upload: true, accept: "image/*", class: 'file-input', name: "question_papers[#{page_number}]" %>
+                  <span class="file-cta">
+                    <span class="file-icon">
+                      <i class="fas fa-upload"></i>
+                    </span>
+                    <span class="file-label">
+                      page <%= page_number %>
+                    </span>
+                  </span>
+                  <span class="file-name">
+                    No photo uploaded.
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      
+    </div>
+  <% end %>
+
+  <% if exam.errors.any? %>
+    <% exam.errors.messages.values.flatten.each do |error|  %>
+      <p class="ml-4 has-text-danger my-1 is-size-6"><%= error %></p>
+    <% end %>
+    <% if exam.question_papers.size > 0 %>
+      <p class="ml-4 has-text-grey my-2 is-size-6">The photos were not uploaded due to above errors. Please upload again.</p>
+    <% end %>
+  <% end %>
+
+  <div class="mx-3 mt-2">
+    <%= form.submit 'Save', class: 'button is-link is-fullwidth' %>
+  </div>
+<% end %>
+
+<% if @exam.persisted? %>
+  <div class="columns is-vcentered is-mobile is-multiline mt-6 ml-3 is-gapless">
+    <div class="column is-full pt-1 pb-0">
+      <div class="field mb-2">
+        <label class="label">Photos of Question Paper</label>
+      </div>
+    </div>
+    <div class="column is-full pt-1 pb-0">
+      <% @exam.question_papers.each do |question_paper| %>
+        <%= link_to rails_blob_path(question_paper.image, disposition: 'preview'), class: "button mx-1 mb-3", target: '_blank' do %>
+          <span class="icon">
+            <i class="fas fa-file-download"></i>
+          </span>
+          <span>Page <%= question_paper.page_number %></span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

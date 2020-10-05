@@ -1,15 +1,27 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Examportal</title>
+    <title>Exam Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js"></script>
   </head>
 
   <body>
-    <%= yield %>
+    
+    <div class="columns is-centered is-multiline">
+        <div class="column is-7-tablet is-5-desktop is-4-widescreen is-3-fullhd ">
+          <%= render 'layouts/default_header' unless @hide_default_header %>
+
+          <%= yield %>
+      </div>
+    </div>
+
   </body>
 </html>

@@ -1,0 +1,73 @@
+<div class="my-2 mx-3 level is-mobile">
+  <div class="level-left">
+    <div class="level-item">
+      <p class="has-text-grey-darker has-text-weight-semibold">
+        <%= @exam.subject %>
+        <br>
+        <%= @exam.exam_date.strftime("%-d %b, %Y") %>
+      </p>
+    </div>
+  </div>
+  <div class="level-right">
+    <p class="has-text-grey-darker has-text-weight-semibold">
+      <%= @exam.start_time %> to <%= @exam.end_time %>
+      <br>
+      Class: <%= @exam.class_name %>
+    </p>
+  </div>
+</div>
+
+<div class="px-3 mt-4 table-container">
+  <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+    <thead>
+      <tr class="has-text-centered">
+        <th colspan="5">Exam Submissions</th>
+      </tr>
+    </thead>
+    <thead>
+      <tr class="has-text-centered">
+        <th>Name</th>
+        <!-- <th>Download All</th> -->
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @exam_submissions.each do |exam_submission| %>
+        <% student = exam_submission.student %>
+        <tr class="has-text-centered">
+          <td class="pt-4"><%= student.name %></td>
+          <!--
+          <td>
+            <%= link_to submissions_exam_path(@exam), class: 'button mx-1 is-link', target: '_blank' do %>
+              <span class="icon">
+                <i class="fas fa-file-download"></i>
+              </span>
+              <span><%= exam_submission.answer_papers.count %> pages</span>
+            <% end %>
+          </td>
+          -->
+          <td>
+            <% exam_submission.answer_papers.order(:page_number).each do |ap| %>
+              <%= link_to rails_blob_path(ap.image), class: 'button ml-1 mb-1 is-link is-light is-small', target: '_blank' do %>
+                <span class="icon">
+                  <i class="fas fa-file-download"></i>
+                </span>
+                <span><%= ap.page_number %></span>
+              <% end %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<br>
+
+<div class="ml-3 mt-4 is-info">
+  <%= link_to '<- All Exams', exams_path %>
+</div>
+
+
+

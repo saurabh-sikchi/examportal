@@ -1,0 +1,18 @@
+<%= render 'student_header' %>
+
+<div class="columns is-vcentered is-mobile my-6"></div>
+
+<div class="columns is-vcentered is-mobile is-multiline mt-6">
+  <div class="column is-full has-text-centered is-size-2">
+    <span class="icon is-large">
+      <i class="fas fa-check-circle fa-3x"></i>
+    </span>
+  </div>
+  <div class="column is-full has-text-centered is-size-5">
+    <b><%= @exam_submission.answer_papers.count %></b> pages submitted
+  </div>
+
+  <div class="column is-full has-text-centered mt-3">
+    You may close this tab now
+  </div>
+</div>

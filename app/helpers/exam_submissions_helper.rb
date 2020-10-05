@@ -1,0 +1,2 @@
+module ExamSubmissionsHelper
+end

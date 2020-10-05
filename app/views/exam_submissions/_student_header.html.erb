@@ -1,0 +1,15 @@
+<header class="header default-header is-vcentered pt-3 pb-2 pr-3 pl-3 box mb-4">
+  <div class="columns is-mobile mb-0">
+    <div class="column is-half pb-1">
+      <h6 class="subtitle is-6"><%= @student.name %></h6>
+    </div>
+    <div class="column is-offset-2 has-text-right pb-1">
+      <%= @exam.subject %>
+    </div>
+  </div>
+  <div class="columns is-mobile mt-0">
+    <div class="column is-offset-2 has-text-right pt-0">
+      End: <%= @exam.end_time %>
+    </div>
+  </div>
+</header>

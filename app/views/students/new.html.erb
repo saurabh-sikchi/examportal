@@ -1,0 +1,46 @@
+<h6 class="is-size-6 my-3 px-3 has-text-primary">To take today's exam, enter your details below.</span></h6>
+
+
+<%= form_with(model: @student, local: true, url: students_url, method: :post) do |form| %>
+  <div class="field mx-3">
+    <label class="label">Name</label>
+    <div class="control">
+      <%= form.text_field(:name, class: 'input', placeholder: 'Name') %>
+    </div>
+  </div>
+
+  <div class="level is-mobile mb-2" id="class-subject-inputs">
+    <div class="level-left">
+      <div class="level-item mx-3">
+        <div class="field">
+          <label class="label">Class</label>
+          <div class="select">
+            <%= form.collection_select(:class_name, Exam::CLASSES, :itself, :itself, include_blank: true, selected: '') %>
+          </div>
+        </div>
+      </div>
+      <div class="level-item ml-4">
+        <div class="field">
+          <label class="label">Subject</label>
+          <div class="select">
+            <select id="subject_select" class="is-250px-input" name="exam_id" disabled>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="mx-3 has-text-danger my-4 is-size-6 is-hidden" id="exam-error">There is no exam today for your class, please come back later</p>
+  <p class="is-size-7 my-3 px-3 has-text-danger"><%= notice %></span></p>
+
+  <% if @student.errors.any? %>
+    <% @student.errors.messages.values.flatten.each do |error|  %>
+      <p class="ml-4 has-text-danger mt-2 is-size-6"><%= error %></p>
+    <% end %>
+  <% end %>
+
+  <div class="mx-3 mt-3">
+    <%= form.submit 'Take Exam', class: 'button is-link is-fullwidth', id: 'take-exam', disabled: true %>
+  </div>
+<% end %>

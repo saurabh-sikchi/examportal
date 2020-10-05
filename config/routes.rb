@@ -1,3 +1,21 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  resources :exams, except: :show do
+    collection do
+      get :for_today
+    end
+
+    member do
+      get 'submissions', to: 'exam_submissions#index'
+    end
+  end
+
+  resources :students, only: :create
+  root to: 'students#new'
+  get '/students', to: redirect('/')
+
+  get 'submitted', to: 'exam_submissions#show'
+  get 'take_exam', to: 'exam_submissions#new', as: :new_exam_submission
+  resources :exam_submissions, only: :create
+  get '/exam_submissions', to: redirect('/take_exam')
+
 end

@@ -12,4 +12,45 @@
  *
  *= require_tree .
  *= require_self
- */
+*/
+
+$file-name-max-width: 100%;
+@import "bulma/bulma";
+
+a:hover {
+  background-color: transparent;
+}
+
+.file-name {
+  min-width: 100%;
+  text-align: center;
+  font-size: 0.8em;
+}
+
+#class-subject-inputs, #exam-time-inputs {
+  margin-bottom: 1.5rem;
+}
+
+.is-200px-input {
+  width: 200px;
+}
+
+.is-150px-input {
+  width: 150px;
+}
+
+.is-250px-input {
+  width: 250px;
+}
+
+.is-opaque-60 {
+  opacity: 0.6;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.file.is-boxed .file-cta {
+  padding: 1em 2em;
+}

@@ -1,0 +1,57 @@
+<div class="my-2 mx-3 level is-mobile">
+  <div class="level-left">
+    <div class="level-item">
+      <p class="mx-3 has-text-primary"><%= notice %></p>
+    </div>
+  </div>
+  <div class="level-right">
+    <div class="level-item">
+      <%= link_to 'New Exam', new_exam_path, class: 'button is-link' %>
+    </div>
+  </div>
+</div>
+
+<div class="px-3 mt-4 table-container">
+  <table class="table is-bordered is-striped is-hoverable is-fullwidth">
+    <thead>
+      <tr class="has-text-centered">
+        <th colspan="5"> All exams</th>
+      </tr>
+    </thead>
+    <thead>
+      <tr class="has-text-centered">
+        <th>Class</th>
+        <th>Subject</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @exams.each do |exam| %>
+        <tr class="has-text-centered">
+          <td><%= exam.class_name %></td>
+          <td><%= exam.subject %></td>
+          <td><%= exam.exam_date.strftime("%-d %b, %Y") %></td>
+          <td><%= exam.start_time %> to <%= exam.end_time %></td>
+          <td>
+            <%= link_to submissions_exam_path(exam), class: 'icon has-text-link px-2 py-4' do %>
+              <i class="fas fa-folder-open fa-lg"></i>
+            <% end %>
+            <%= link_to edit_exam_path(exam), class: 'icon has-text-link px-2 py-4' do %>
+              <i class="fas fa-pencil-alt fa-lg"></i>
+            <% end %>
+            <%= link_to exam, method: :delete, data: { confirm: 'Are you sure?' }, class: 'icon has-text-link px-2 py-4' do %>
+              <i class="fas fa-trash fa-lg"></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<br>
+
+
