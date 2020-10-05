@@ -45,7 +45,7 @@ server "ec2-13-127-137-86.ap-south-1.compute.amazonaws.com", user: "ubuntu", rol
 set :pty, true
 set :ssh_options, {
   keys: %w(/home/saurabh/misc/examportal.pem),
-  forward_agent: false,
+  forward_agent: true,
   auth_methods: %w(publickey)
 }
 #
