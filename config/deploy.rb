@@ -2,14 +2,14 @@
 lock "~> 3.14.1"
 
 set :application, "examportal"
-set :repo_url, "git@github.com:saurabh-sikchi/exam-portal.git"
+set :repo_url, "git@github.com:saurabh-sikchi/examportal.git"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
 # set :deploy_to, "/var/www/my_app_name"
-set :deploy_to, "/home/deploy/#{fetch :application}"
+set :deploy_to, "/home/ubuntu/#{fetch :application}"
 
 
 # Default value for :format is :airbrussh.
