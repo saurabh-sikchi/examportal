@@ -63,7 +63,7 @@ class Exam < ApplicationRecord
   end
 
   def end_time_should_be_greater_than_start_time
-    if end_time <= start_time
+    if end_time_parsed <= start_time_parsed
       self.errors.add(:base, "End time should be greater than start time")
     end
   end
