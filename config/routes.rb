@@ -18,4 +18,5 @@ Rails.application.routes.draw do
   resources :exam_submissions, only: :create
   get '/exam_submissions', to: redirect('/take_exam')
 
+  get '/admin', to: redirect('/exams')
 end
