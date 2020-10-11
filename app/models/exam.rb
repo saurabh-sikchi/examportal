@@ -6,7 +6,15 @@ class Exam < ApplicationRecord
   CLASSES = (1..10).to_a
   SUBJECTS = [
     'English',
-    'Maths'
+    'Maths',
+    'Science',
+    'Social Studies',
+    'History',
+    'Geography',
+    'Hindi',
+    'Marathi',
+    'Sanskrit',
+    'Grammar',
   ]
   TIMES = [8,9,10,11,12,1,2,3,4,5,6,7].map do |t| 
     mod = t  >= 8 && t < 12 ? 'AM' : 'PM'
