@@ -19,7 +19,8 @@ class ExamSubmissionsController < ApplicationController
   end
 
   def new
-    
+    @exam_submission = ExamSubmission.find_by(exam: @exam, student: @student)
+    redirect_to root_url, notice: "Your submission has already been recorded for this exam." unless @exam_submission.nil?
   end
 
   def create

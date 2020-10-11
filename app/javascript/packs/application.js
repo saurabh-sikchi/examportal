@@ -20,12 +20,12 @@ console.log('js working')
 let idempotentPageLoadFlag;
 
 // wait for DOM to load
-document.onreadystatechange = function () {
-  if (document.readyState == "interactive") {
-    idempotentPageLoadFlag = false;   
-    onPageLoad();
-  }
-}
+// document.onreadystatechange = function () {
+//   if (document.readyState == "interactive") {
+//     idempotentPageLoadFlag = false;   
+//     onPageLoad();
+//   }
+// }
 
 document.addEventListener("turbolinks:load", () => {
   idempotentPageLoadFlag = false;
@@ -39,6 +39,7 @@ function onPageLoad() {
   } else {
     idempotentPageLoadFlag = true;
   }
+  console.log('pageLoad')
   
   let classNameSelect = document.getElementById('student_class_name');
   if(classNameSelect) {
@@ -64,10 +65,17 @@ function onPageLoad() {
 
   let examSubmissionForm = document.getElementById('exam-submission-form');
   if(examSubmissionForm) {
-    examSubmissionForm.onsubmit = () => {
-      hideExamSubmissionError()
-      addLoadingClassToSubmitButton()
-    }
+
+    examSubmissionForm.addEventListener("ajax:beforeSend", (e) => {
+      if (confirm("Have you uploaded ALL the answer papers? You will not be able to upload after submitting.")) {
+        hideExamSubmissionError()
+        addLoadingClassToSubmitButton()
+      } else {
+        console.log('do not submit')
+        e.preventDefault();
+        return false
+      }
+    })
 
     examSubmissionForm.addEventListener("ajax:success", (e) => {
       data = e.detail[0]
