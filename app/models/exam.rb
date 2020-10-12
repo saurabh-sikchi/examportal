@@ -19,7 +19,7 @@ class Exam < ApplicationRecord
   TIMES = [8,9,10,11,12,1,2,3,4,5,6,7].map do |t| 
     mod = t  >= 8 && t < 12 ? 'AM' : 'PM'
     [ "#{t}:00 #{mod}", "#{t}:30 #{mod}" ]
-  end.flatten
+  end.flatten + ['11:00 PM']
 
   scope :today, -> { where(exam_date: Date.today) }
   default_scope { order(exam_date: :desc) }

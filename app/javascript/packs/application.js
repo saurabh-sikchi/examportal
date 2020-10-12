@@ -66,12 +66,16 @@ function onPageLoad() {
   let examSubmissionForm = document.getElementById('exam-submission-form');
   if(examSubmissionForm) {
 
+    const perfEntries = performance.getEntriesByType('navigation');
+    if (perfEntries.length && perfEntries[0].type === 'back_forward') {
+      window.location.reload();
+    }
+
     examSubmissionForm.addEventListener("ajax:beforeSend", (e) => {
       if (confirm("Have you uploaded ALL the answer papers? You will not be able to upload after submitting.")) {
         hideExamSubmissionError()
         addLoadingClassToSubmitButton()
       } else {
-        console.log('do not submit')
         e.preventDefault();
         return false
       }
