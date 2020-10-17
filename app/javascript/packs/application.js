@@ -16,16 +16,11 @@ require("channels")
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
+import { DirectUpload } from "@rails/activestorage"
+
 console.log('js working')
 let idempotentPageLoadFlag;
 
-// wait for DOM to load
-// document.onreadystatechange = function () {
-//   if (document.readyState == "interactive") {
-//     idempotentPageLoadFlag = false;   
-//     onPageLoad();
-//   }
-// }
 
 document.addEventListener("turbolinks:load", () => {
   idempotentPageLoadFlag = false;
@@ -49,19 +44,8 @@ function onPageLoad() {
     }
   }
 
-  fileInputs = document.querySelectorAll('.file.has-name input[type=file]');
-  for (let i = 0; i < fileInputs.length; i++) {
-    const fileInput = fileInputs[i];
-    fileInput.onchange = () => {
-      console.log(fileInput.files[0].name);
-      if (fileInput.files.length > 0) {
-        const fileName = fileInput.parentNode.querySelector('.file-name');
-        fileName.textContent = fileInput.files[0].name;
-        fileName.classList.add('has-text-success')
-      }
-    }
-    
-  }
+  let fileInputs = document.querySelectorAll('.file.has-name input[type=file]');
+  
 
   let examSubmissionForm = document.getElementById('exam-submission-form');
   if(examSubmissionForm) {
@@ -82,13 +66,13 @@ function onPageLoad() {
     })
 
     examSubmissionForm.addEventListener("ajax:success", (e) => {
-      data = e.detail[0]
+      let data = e.detail[0]
       if (data.success) {
         window.location.href = data.redirect_to
       } else {
         showExamSubmissionError(data.error)
+        removeLoadingClassToSubmitButton()
       }
-      removeLoadingClassToSubmitButton()
     })
 
     examSubmissionForm.addEventListener("ajax:error", (e) => {
@@ -97,9 +81,85 @@ function onPageLoad() {
 
       showExamSubmissionError()
       removeLoadingClassToSubmitButton()
-    })  
+    })
 
 
+    let uploadsInProgress = 0;
+    for (let i = 0; i < fileInputs.length; i++) {
+      const fileInput = fileInputs[i];
+      fileInput.onchange = () => {
+        if (fileInput.files.length > 0) {
+
+          hideExamSubmissionError();
+
+          const fileNameElem = fileInput.parentNode.querySelector('.file-name');
+          fileNameElem.textContent = fileInput.files[0].name;
+          fileNameElem.classList.add('has-text-link');
+
+          const url = fileInput.dataset.directUploadUrl
+          const upload = new DirectUpload(fileInput.files[0], url)
+          uploadsInProgress++;
+          addLoadingClassToSubmitButton(uploadsInProgress);
+
+          // TODO: remove other inputs
+          let inputs = document.querySelectorAll('input[name="'+ fileInput.name +'"][type=hidden]');
+          for (let i = 0; i < inputs.length; i++) {
+            const input = inputs[i];
+            if (!fileInput.isSameNode(input)) {
+              input.remove();
+              console.log('removing')
+            }
+          }
+
+          upload.create((error, blob) => {
+
+            
+
+            uploadsInProgress--;
+            if (uploadsInProgress <= 0) {
+              removeLoadingClassToSubmitButton();
+            } else {
+              addLoadingClassToSubmitButton(uploadsInProgress);
+            }
+            if (error) {
+              // Handle the error
+              fileNameElem.classList.add('has-text-danger');
+              console.log(error)
+              fileInput.value="";
+            } else {
+              // Add an appropriately-named hidden input to the form with a
+              //  value of blob.signed_id so that the blob ids will be
+              //  transmitted in the normal upload flow
+
+              fileNameElem.classList.add('has-text-success');
+              const hiddenField = document.createElement('input')
+              hiddenField.setAttribute("type", "hidden");
+              hiddenField.setAttribute("value", blob.signed_id);
+              hiddenField.name = fileInput.name
+              document.querySelector('form').appendChild(hiddenField);
+              console.log('uploaded: ', fileInput.files[0].name)
+              fileInput.value="";
+            }
+          })
+        
+
+        }
+
+      }
+      
+    }
+  } else {
+    for (let i = 0; i < fileInputs.length; i++) {
+      const fileInput = fileInputs[i];
+      fileInput.onchange = () => {
+        if (fileInput.files.length > 0) {
+
+          const fileNameElem = fileInput.parentNode.querySelector('.file-name');
+          fileNameElem.textContent = fileInput.files[0].name;
+          fileNameElem.classList.add('has-text-link');
+        }
+      }
+    }
   }
 }
 
@@ -155,16 +215,20 @@ function hideExamSubmissionError() {
   errorElem.innerHTML = "There was an error, please submit again.";
 }
 
-function addLoadingClassToSubmitButton() {
+function addLoadingClassToSubmitButton(uploadsInProgress) {
   let formSubmit = document.getElementById('exam-submission-form-submit');
   formSubmit.classList.add('is-loading');
   formSubmit.disabled = true;
+  if (uploadsInProgress) {
+    document.getElementById("exam-submission-help").innerHTML = uploadsInProgress + " upload in progess..."
+  }
 }
 
 function removeLoadingClassToSubmitButton() {
   let formSubmit = document.getElementById('exam-submission-form-submit');
   formSubmit.classList.remove('is-loading');
   formSubmit.disabled = false;
+  document.getElementById("exam-submission-help").innerHTML = "To clear uploads, refresh the page."
 }
 
 

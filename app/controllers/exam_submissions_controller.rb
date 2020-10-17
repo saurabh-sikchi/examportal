@@ -33,7 +33,6 @@ class ExamSubmissionsController < ApplicationController
     @exam_submission = ExamSubmission.new(student: @student, exam: @exam)
     
     set_answer_papers
-
     if @exam_submission.save
       cookies.signed[:exam_submission_id] = { value: @exam_submission.id, expires: 20.minutes }
       h = { success: true, redirect_to: submitted_url }

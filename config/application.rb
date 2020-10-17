@@ -17,5 +17,8 @@ module Examportal
     # the framework and any gems in your application.
 
     config.time_zone = "Mumbai"
+
+    config.active_storage.analyzers = []
+    config.active_storage.previewers = []
   end
 end

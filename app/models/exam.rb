@@ -26,7 +26,7 @@ class Exam < ApplicationRecord
 
   validate :has_at_least_one_question_paper
   validate :question_papers_page_numbers_should_be_sequential
-  validate :exam_date_should_be_greater_than_today
+  validate :end_time_should_be_greater_than_now
   validate :no_overlapping_exam_for_same_class
   validate :end_time_should_be_greater_than_start_time
   
@@ -57,9 +57,9 @@ class Exam < ApplicationRecord
     end
   end
 
-  def exam_date_should_be_greater_than_today
-    if !self.persisted? && exam_date < Date.today
-      self.errors.add(:exam_date, "Exam date cannot be in the past")
+  def end_time_should_be_greater_than_now
+    if !self.persisted? && !has_not_ended?
+      self.errors.add(:exam_date, "Exam cannot be in the past")
     end
   end
 
